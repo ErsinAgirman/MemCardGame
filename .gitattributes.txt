@@ -1,0 +1,5 @@
+AppleEventIntegration.bundle/Contents/MacOS/AppleEventIntegration binary
+
+# Unity shader'ları C# 
+*.shader linguist-language=C#
+*.hlsl linguist-language=C#

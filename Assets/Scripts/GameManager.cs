@@ -13,12 +13,14 @@ public class GameManager : MonoBehaviour
     public GameObject[] Buttons;
     public GameObject[] endGamePanels;
     public TextMeshProUGUI timerText;
+    public Slider slider;
     [Header("Ses Ayarları")]
     public AudioSource[] sounds;
 
     float minute;
     float second;
     bool endTime = false;
+    float passedTime = 0;
     int firstSelectedCardIndex;
     public float totalTime = 10;
     public int targetCount = 18;
@@ -32,34 +34,69 @@ public class GameManager : MonoBehaviour
     {
         firstSelectedCardIndex = 0;
         endTime = false;
+        passedTime = 0;
+        slider.maxValue = totalTime;
     }
 
 
     void Update()
     {
-        if (endTime != true && totalTime > 1)
+        if (timerText != null)
         {
-            totalTime -= Time.deltaTime;
-            minute = Mathf.FloorToInt(totalTime / 60);
-            second = Mathf.FloorToInt(totalTime % 60);
-            timerText.text = string.Format("{0:00}:{1:00}", minute, second);
-        }
-        else
-        {
-            endTime = true;
-            GameOver();
-            Debug.Log("Zaman bitti");
+
+            if (endTime != true && totalTime > 1 && timerText != null && passedTime != totalTime)
+            {
+                totalTime -= Time.deltaTime;
+                minute = Mathf.FloorToInt(totalTime / 60);
+                second = Mathf.FloorToInt(totalTime % 60);
+                timerText.text = string.Format("{0:00}:{1:00}", minute, second);
+
+                passedTime += Time.deltaTime;
+                slider.value = passedTime;
+            }
+            else
+            {
+                endTime = true;
+                GameOver();
+                Debug.Log("Zaman bitti");
+            }
         }
     }
 
     void GameOver()
     {
-        endGamePanels[0].SetActive(true);
+        if (endGamePanels != null)
+        {
+            endGamePanels[0].SetActive(true);
+        }
     }
 
     void Win()
     {
-        endGamePanels[1].SetActive(true);
+        if (endGamePanels != null)
+        {
+            endGamePanels[1].SetActive(true);
+        }
+    }
+
+    public void PauseGame()
+    {
+        if (endGamePanels != null)
+        {
+            endGamePanels[2].SetActive(true);
+            Time.timeScale = 0;
+        }
+
+    }
+
+    public void ResumeGame()
+    {
+        if (endGamePanels != null)
+        {
+            endGamePanels[2].SetActive(false);
+            Time.timeScale = 1;
+        }
+
     }
 
     public void GiveObject(GameObject myObject)
@@ -69,7 +106,7 @@ public class GameManager : MonoBehaviour
 
         buttonOwn.GetComponent<Image>().raycastTarget = false;
 
-        sounds[1].Play();
+        sounds[0].Play();
     }
 
     public void ButtonClick(int value)
@@ -135,7 +172,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            sounds[2].Play();
+            sounds[1].Play();
             selectedButton.GetComponent<Image>().sprite = defaultSprite;
             buttonOwn.GetComponent<Image>().sprite = defaultSprite;
             Debug.Log("Eşleşmedi.");
@@ -155,4 +192,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+
+
 }

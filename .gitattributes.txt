@@ -1,8 +1,6 @@
-AppleEventIntegration.bundle/Contents/MacOS/AppleEventIntegration binary
-
-# Unity shader'ları C# 
-*.shader linguist-language=C#
-*.hlsl linguist-language=C#
 *.shader linguist-detectable=false
+*.cginc linguist-detectable=false
 *.hlsl linguist-detectable=false
 
+# Scriptler normal şekilde C# olarak kalsın
+*.cs linguist-language=C#

@@ -23,11 +23,13 @@ public class GameManager : MonoBehaviour
     float passedTime = 0;
     int firstSelectedCardIndex;
     public float totalTime = 10;
-    public int targetCount = 18;
+    public int targetCount;
     int currentCount;
 
-
-
+    public GameObject Grid;
+    public GameObject Pool;
+    bool createStat;
+    int createNumber;
 
 
     void Start()
@@ -36,6 +38,11 @@ public class GameManager : MonoBehaviour
         endTime = false;
         passedTime = 0;
         slider.maxValue = totalTime;
+        targetCount = Pool.transform.childCount / 2;
+        createStat = true;
+        createNumber = 0;
+
+        StartCoroutine(CreateGame());
     }
 
 
@@ -191,6 +198,27 @@ public class GameManager : MonoBehaviour
     public void PlayAgain()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    IEnumerator CreateGame()
+    {
+        yield return new WaitForSeconds(.1f);
+
+        while (createStat)
+        {
+            int randomNum = Random.Range(0, Pool.transform.childCount - 1);
+            if (Pool.transform.GetChild(randomNum).gameObject != null)
+            {
+                Pool.transform.GetChild(randomNum).transform.SetParent(Grid.transform);
+                createNumber++;
+
+                if (createNumber == targetCount * 2)
+                {
+                    createStat = false;
+                }
+            }
+
+        }
     }
 
 
